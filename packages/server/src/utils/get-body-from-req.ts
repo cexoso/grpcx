@@ -2,7 +2,7 @@ import { Http2ServerRequest } from "http2";
 import { Buffer } from "buffer";
 
 export function getBodyFromReq(req: Http2ServerRequest) {
-  return new Promise((resolve, reject) => {
+  return new Promise<Buffer>((resolve, reject) => {
     const chunks: Buffer[] = [];
 
     req.on("data", (chunk: Buffer) => {
