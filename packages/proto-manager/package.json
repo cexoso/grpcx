@@ -1,0 +1,7 @@
+{
+  "name": "protos",
+  "private": true,
+  "devDependencies": {
+    "@protobuf-es/cli": "^0.0.22"
+  }
+}
