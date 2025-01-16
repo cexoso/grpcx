@@ -3,5 +3,8 @@
   "private": true,
   "dependencies": {
     "@protobuf-es/core": "^0.0.13"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.7"
   }
 }
