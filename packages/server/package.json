@@ -4,7 +4,16 @@
   "dependencies": {
     "@protobuf-es/core": "^0.0.13"
   },
+  "scripts": {
+    "test": "vitest",
+    "dev": "nodemon",
+    "server": "node -r ts-node/register/transpile-only src/index.ts"
+  },
   "devDependencies": {
-    "@types/node": "^22.10.7"
+    "@types/node": "^22.10.7",
+    "nodemon": "^3.1.9",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.7.3",
+    "vitest": "^2.1.8"
   }
 }
