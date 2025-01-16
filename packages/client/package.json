@@ -1,4 +1,12 @@
 {
   "name": "client",
-  "private": true
+  "private": true,
+  "scripts": {
+    "test": "vitest",
+    "dev": "node -r ts-node/register/transpile-only src/index.ts"
+  },
+  "devDependencies": {
+    "ts-node": "^10.9.2",
+    "typescript": "^5.7.3"
+  }
 }
