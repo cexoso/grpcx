@@ -9,7 +9,7 @@ cmd.compileProtos({
   protoDir: join(__dirname, "../protos"),
 
   // 将中间文件生成到临时文件目录
-  outDir: join(__dirname, "../../server"),
+  outDir: join(__dirname, "../../server/src/messages"),
 
   // 最终会 prettier 格式化，所以中间产物不需要 prettier
   withPrettier: false,

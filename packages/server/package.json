@@ -1,4 +1,7 @@
 {
   "name": "server",
-  "private": true
+  "private": true,
+  "dependencies": {
+    "@protobuf-es/core": "^0.0.13"
+  }
 }
