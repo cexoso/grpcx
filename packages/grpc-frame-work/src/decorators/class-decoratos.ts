@@ -7,6 +7,7 @@ type ScopeType = "Request" | "App";
 type Description =
   | {
       type: "Controller";
+      serviceName: string;
     }
   | {
       type: "Service";
@@ -14,11 +15,11 @@ type Description =
     };
 
 // 是否有必要
-export const Controller = () => (target: Function) => {
+export const Controller = (serviceName: string) => (target: Function) => {
   decorate(injectable(), target);
   Reflect.defineMetadata(
     classDescription,
-    { type: "Controller" } as Description,
+    { type: "Controller", serviceName } as Description,
     target,
   );
 };

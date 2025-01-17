@@ -1,3 +1,5 @@
+export { GrpcMethod } from "./decorators/grpc-decorator";
+
 export {
   Controller,
   Service,

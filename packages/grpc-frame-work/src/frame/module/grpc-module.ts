@@ -1,9 +1,10 @@
 import { Container, interfaces } from "inversify";
-import { getClassDescription, Method } from "../../decorators";
+import { getClassDescription } from "../../decorators";
 import { applyMiddleware, Middleware, Next } from "../middleware";
 import { dash } from "radash";
 import { Modules } from "./modules";
 import { runAllMehtodMiddlewares } from "../../decorators/apply-method-middleware-decorator";
+import { getGrpcDescriptions } from "../../decorators/grpc-decorator";
 
 export interface Options {
   // injectable classes
@@ -12,20 +13,11 @@ export interface Options {
   importModules?: Modules[];
 }
 
-export interface CreateAppOptions {
-  importModules?: Modules[];
-}
-
 export interface RouteConfig {
-  path: string[];
-  compiledPathMatcher: Array<{
-    match: (input: string) => boolean;
-    originPath: string;
-  }>;
   controllerName: string;
   controller: Function;
   methodName: string;
-  httpMethod: Method;
+  rpcMethod: string;
 }
 
 // 从模块中获取到应用级模块和请求级模块
@@ -107,24 +99,16 @@ export interface CreateRequestOptions {
 function requestContainerFactory(opts: {
   appContainer: Container;
   requestModules: Function[];
-  requestBuiltinModules: Function[];
   requestInjectables: Function[];
 }) {
-  function createRequestContainer(createRequestOptions?: CreateRequestOptions) {
+  function createRequestContainer() {
     const requestContainer = opts.appContainer.createChild();
 
     // 业务自己的请求级 injectable 在这注入
     loadInjectables(requestContainer, opts.requestInjectables);
-    // runtime 覆盖的
-    loadInjectables(requestContainer, opts.requestBuiltinModules);
     // 团队抽象的
     loadInjectables(requestContainer, opts.requestModules);
 
-    // 用于在构建请求实例时，绑定请求上下文，web login 等请求级功能函数可能是在此处绑定提供的
-    bindConstantValues(
-      requestContainer,
-      createRequestOptions?.override?.constantsValues ?? [],
-    );
     return requestContainer;
   }
   return createRequestContainer;
@@ -148,20 +132,59 @@ function bindConstantValues(
   });
 }
 
+const createRouterHelper = (controllerMaps: Map<string, Function>) => {
+  type ServiceName = string;
+  type MethodName = string;
+  const routeMap: Map<ServiceName, Map<MethodName, RouteConfig>> = new Map();
+  for (const [controllerName, controller] of controllerMaps) {
+    const routerDescription = getGrpcDescriptions(controller);
+    const classDescriptions = getClassDescription(controller);
+    if (classDescriptions.type !== "Controller") {
+      continue;
+    }
+    if (routerDescription) {
+      for (const [methodName, description] of Object.entries(
+        routerDescription,
+      )) {
+        let methodMap = routeMap.get(classDescriptions.serviceName);
+        if (methodMap === undefined) {
+          methodMap = new Map();
+          routeMap.set(classDescriptions.serviceName, methodMap);
+        }
+        for (const method of description.method) {
+          methodMap.set(method, {
+            rpcMethod: method,
+            controllerName,
+            controller,
+            methodName,
+          });
+        }
+      }
+    }
+  }
+  return {
+    getHandle(serviceName: ServiceName, path: string) {
+      const serviceMap = routeMap.get(serviceName);
+      const description = serviceMap?.get(path);
+      return description;
+    },
+  };
+};
+
 export const grpcApp = (opts: Options) => {
   const middlewares = opts.middlewares ?? [];
 
   const controllerMaps = getControllerMaps(opts);
-  const devImportModules = getModules(opts.importModules);
+  const importModules = getModules(opts.importModules);
 
   const { appInjectables, requestInjectables } = getInjectables(
     opts.injectables,
   );
+
+  const routerHelper = createRouterHelper(controllerMaps);
   // 应用级的服务在这注册
   return {
-    createApp(opts?: CreateAppOptions) {
-      const runtimeImportModules = getModules(opts?.importModules);
-
+    createApp() {
       const appContainer = new Container();
 
       // 业务自己声明的 injectables
@@ -169,24 +192,22 @@ export const grpcApp = (opts: Options) => {
 
       // 加载内置的模块，内置的模块意味着这是 runtime 传递过来的，它可能用于处理用户登录
       // rbac 权限等
-      loadInjectables(appContainer, runtimeImportModules.appInjectables);
 
       // 加载研发声明依赖的模块, 这个模块的作用是为了给团队骨干抽象一些业务内复用的能力
-      loadInjectables(appContainer, devImportModules.appInjectables);
+      loadInjectables(appContainer, importModules.appInjectables);
 
-      bindConstantValues(appContainer, devImportModules.constantsValues);
-      bindConstantValues(appContainer, runtimeImportModules.constantsValues);
+      bindConstantValues(appContainer, importModules.constantsValues);
 
+      const createRequestContainer = requestContainerFactory({
+        appContainer,
+        requestInjectables: requestInjectables,
+        requestModules: importModules.requestInjectables,
+      });
       return {
         // 返回给上层去继承，而不是将运行时传递进来
         // appContainer.parent = runtimeContainer;
         appContainer,
-        createRequestContainer: requestContainerFactory({
-          appContainer,
-          requestBuiltinModules: runtimeImportModules.requestInjectables,
-          requestInjectables: requestInjectables,
-          requestModules: devImportModules.requestInjectables,
-        }),
+        createRequestContainer,
         unshiftMiddleware(middleware: Middleware) {
           middlewares.unshift(middleware);
         },
@@ -207,9 +228,19 @@ export const grpcApp = (opts: Options) => {
           }
           await applyMiddleware(middlewares, ctx, next);
         },
-        getHandlerClass(namespace: string) {
-          const handler = controllerMaps.get(namespace);
-          return handler;
+        getHandlerClass(serviceName: string, method: string) {
+          const handle = routerHelper.getHandle(serviceName, method);
+          return {
+            apply: <T>(input: T) => {
+              const { controller, methodName } = handle!;
+              const requestContainer = createRequestContainer();
+              const controllerInstance = requestContainer.get<any>(controller);
+              return controllerInstance[methodName].apply(controllerInstance, [
+                input,
+              ]);
+            },
+            ...handle,
+          };
         },
       };
     },
