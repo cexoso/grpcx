@@ -6,6 +6,9 @@ import {
 } from "./messages/helloworld";
 import { encode, decode } from "@cexoso/grpc-utils";
 import { Buffer } from "buffer";
+import { HelloApp } from "./app";
+const app = HelloApp.createApp();
+
 constants.HTTP2_HEADER_STATUS;
 
 const decodeHelloRequest = wrapDecode(_decodeHelloRequests);
@@ -14,7 +17,13 @@ const encodeHelloReply = wrapEncode(_encodeHelloReply);
 const server = createServer();
 
 server.on("stream", (stream, headers) => {
-  console.log("debugger 🐛 headers", headers);
+  const path = headers[":path"]!;
+  const paths = path.split("/");
+  const serviceName = paths[1]!;
+  const methodName = paths[2]!;
+
+  const handle = app.getHandlerClass(serviceName, methodName);
+
   let data: Buffer[] = [];
   stream.on("data", (buffer: Buffer) => {
     data.push(buffer);
@@ -24,10 +33,8 @@ server.on("stream", (stream, headers) => {
     const req = Buffer.concat(data);
     const message = decode(new Uint8Array(req));
     const reqData = decodeHelloRequest(message);
-    const responsMessage = encodeHelloReply({
-      message: `hello ${reqData.name}`,
-    });
-
+    const response = handle.apply(reqData);
+    const responsMessage = encodeHelloReply(response);
     stream.respond(
       {
         ":status": 200,
@@ -47,7 +54,6 @@ server.on("stream", (stream, headers) => {
         if (!error) {
           stream.end();
           stream.once("wantTrailers", () => {
-            console.log("debugger 🐛 sendTrailers");
             stream.sendTrailers({
               "grpc-message": "OK",
               "grpc-status": 0,
