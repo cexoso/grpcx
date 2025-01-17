@@ -1,0 +1,13 @@
+{
+  "name": "@cexoso/grpc-utils",
+  "dependencies": {},
+  "scripts": {
+    "test": "vitest"
+  },
+  "main": "./src/index.ts",
+  "module": "./src/index.ts",
+  "devDependencies": {
+    "typescript": "^5.7.3",
+    "vitest": "^2.1.8"
+  }
+}
