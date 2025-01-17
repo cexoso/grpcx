@@ -6,7 +6,12 @@
     "dev": "node -r ts-node/register/transpile-only src/index.ts"
   },
   "devDependencies": {
+    "@types/node": "^22.10.7",
     "ts-node": "^10.9.2",
     "typescript": "^5.7.3"
+  },
+  "dependencies": {
+    "@protobuf-es/core": "^0.0.13",
+    "@cexoso/grpc-utils": "workspace: *"
   }
 }

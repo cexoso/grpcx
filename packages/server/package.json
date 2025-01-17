@@ -1,13 +1,14 @@
 {
   "name": "server",
   "private": true,
-  "dependencies": {
-    "@protobuf-es/core": "^0.0.13"
-  },
   "scripts": {
     "test": "vitest",
     "dev": "nodemon",
     "server": "node -r ts-node/register/transpile-only src/index.ts"
+  },
+  "dependencies": {
+    "@protobuf-es/core": "^0.0.13",
+    "@cexoso/grpc-utils": "workspace: *"
   },
   "devDependencies": {
     "@types/node": "^22.10.7",
