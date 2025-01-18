@@ -6,7 +6,7 @@
   },
   "scripts": {
     "test": "vitest",
-    "build": "vitest --run && ts-pkg-build build",
+    "build": "ts-pkg-build build",
     "prepublishOnly": "npm run build"
   },
   "main": "./src/index.ts",
