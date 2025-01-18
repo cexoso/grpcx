@@ -5,6 +5,7 @@
     "jsxImportSource": "vue",
     "module": "NodeNext",
     "moduleResolution": "nodenext" /* Specify how TypeScript looks up a file from a given module specifier. */,
+    "emitDecoratorMetadata": true, //给源码里的装饰器声明加上设计类型元数据。Reflect.metadata
     /* 构建到服务器端运行，不需要关注 d.ts */
     "declaration": true,
     /* 构建到服务器端运行，不需要 sourcemap，如果你关注报错堆栈，可以打开此项 */

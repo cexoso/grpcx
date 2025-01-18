@@ -7,6 +7,7 @@ import {
 } from "./apply-method-middleware-decorator";
 import { Controller, Service } from "./class-decoratos";
 import { grpcApp } from "../frame/module/grpc-module";
+import { MetaDataManager } from "../metadata-manager/metadata-manager";
 
 const TestMiddleware2: FunctionMiddleware = async (_ctx, next) => {
   _ctx.order = _ctx.order || [];
@@ -24,7 +25,7 @@ const TestMiddleware: FunctionMiddleware = async (_ctx, next) => {
   await next();
 };
 
-@Controller()
+@Controller("")
 class FooController {
   @apply(TestMiddleware)
   @apply(TestMiddleware2)
@@ -45,7 +46,7 @@ const composedDecorator = composeMethodDecorator([
   TestMiddleware2,
 ]);
 
-@Controller()
+@Controller("")
 class BarController {
   @composedDecorator
   indexMethod() {}
@@ -60,6 +61,7 @@ describe("middlware", () => {
     const next = stub();
     const appDescription = grpcApp({
       injectables: [FooController],
+      metadataManager: new MetaDataManager(),
     });
     const app = appDescription.createApp();
     const request = app.createRequestContainer();
@@ -87,6 +89,7 @@ describe("middlware", () => {
     };
     const appDescription = grpcApp({
       injectables: [FooController],
+      metadataManager: new MetaDataManager(),
     });
     const app = appDescription.createApp();
     const request = app.createRequestContainer();
@@ -111,6 +114,7 @@ describe("middlware", () => {
     const next = stub();
     const appDescription = grpcApp({
       injectables: [BarController],
+      metadataManager: new MetaDataManager(),
     });
     const app = appDescription.createApp();
     const request = app.createRequestContainer();
@@ -157,13 +161,14 @@ describe("middlware", () => {
       // await next()
     };
 
-    @Controller()
+    @Controller("")
     class InnerController {
       @apply(MiddleA)
       indexMethod() {}
     }
     const appDescription = grpcApp({
       injectables: [InnerController, AppService, RequestService],
+      metadataManager: new MetaDataManager(),
     });
     const app = appDescription.createApp();
     const request = app.createRequestContainer();

@@ -1,11 +1,11 @@
 import { MetaDataManager } from "@protobuf-es/grpc-frame-work";
-import { decodeHelloReply, encodeHelloReply } from "./helloworld";
+import { decodeHelloRequest, encodeHelloReply } from "./helloworld";
 import { wrapDecode, wrapEncode } from "@protobuf-es/core";
 
 export const metadataManager = new MetaDataManager();
 
 metadataManager.setMetaData("helloworld.Greeter", "SayHello", {
-  requestDecoder: wrapDecode(decodeHelloReply),
+  requestDecoder: wrapDecode(decodeHelloRequest),
   responseEncoder: wrapEncode(encodeHelloReply),
 });
 

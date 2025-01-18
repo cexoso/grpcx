@@ -1,20 +1,22 @@
 {
-  "name": "server",
+  "name": "demo-server",
   "private": true,
   "scripts": {
     "test": "vitest",
     "dev": "nodemon",
+    "build": "tsup src/index.ts -d=. --format=esm",
     "server": "node -r ts-node/register/transpile-only src/index.ts"
   },
   "dependencies": {
     "@protobuf-es/core": "^0.0.13",
-    "@protobuf-es/grpc-utils": "workspace: *",
-    "@protobuf-es/grpc-frame-work": "workspace: *"
+    "@protobuf-es/grpc-frame-work": "workspace: *",
+    "@protobuf-es/grpc-utils": "workspace: *"
   },
   "devDependencies": {
     "@types/node": "^22.10.7",
     "nodemon": "^3.1.9",
     "ts-node": "^10.9.2",
+    "tsup": "^8.3.5",
     "typescript": "^5.7.3",
     "vitest": "^2.1.8"
   }
