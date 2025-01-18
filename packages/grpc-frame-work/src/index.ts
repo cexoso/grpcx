@@ -1,3 +1,5 @@
+export { MetaDataManager } from "./metadata-manager/metadata-manager";
+
 export { GrpcMethod } from "./decorators/grpc-decorator";
 
 export {
@@ -10,7 +12,6 @@ export {
 
 export { grpcApp } from "./frame/module/grpc-module";
 export type {
-  CreateAppOptions,
   RouteConfig,
   CreateRequestOptions,
 } from "./frame/module/grpc-module";
