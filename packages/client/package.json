@@ -12,6 +12,6 @@
   },
   "dependencies": {
     "@protobuf-es/core": "^0.0.13",
-    "@cexoso/grpc-utils": "workspace: *"
+    "@protobuf-es/grpc-utils": "workspace: *"
   }
 }

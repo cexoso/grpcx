@@ -1,5 +1,5 @@
 {
-  "name": "@cexoso/grpc-utils",
+  "name": "@protobuf-es/grpc-utils",
   "dependencies": {},
   "scripts": {
     "test": "vitest"

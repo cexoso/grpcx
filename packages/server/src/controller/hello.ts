@@ -1,4 +1,4 @@
-import { Controller, GrpcMethod } from "@cexoso/grpc-frame-work";
+import { Controller, GrpcMethod } from "@protobuf-es/grpc-frame-work";
 
 @Controller("helloworld.Greeter")
 export class Hello {

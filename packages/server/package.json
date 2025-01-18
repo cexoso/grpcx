@@ -8,8 +8,8 @@
   },
   "dependencies": {
     "@protobuf-es/core": "^0.0.13",
-    "@cexoso/grpc-utils": "workspace: *",
-    "@cexoso/grpc-frame-work": "workspace: *"
+    "@protobuf-es/grpc-utils": "workspace: *",
+    "@protobuf-es/grpc-frame-work": "workspace: *"
   },
   "devDependencies": {
     "@types/node": "^22.10.7",

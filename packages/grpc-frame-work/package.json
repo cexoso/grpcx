@@ -1,5 +1,5 @@
 {
-  "name": "@cexoso/grpc-frame-work",
+  "name": "@protobuf-es/grpc-frame-work",
   "version": "1.1.0",
   "publishConfig": {
     "directory": "dist",

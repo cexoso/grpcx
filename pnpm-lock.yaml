@@ -10,12 +10,12 @@ importers:
 
   packages/client:
     dependencies:
-      '@cexoso/grpc-utils':
-        specifier: 'workspace: *'
-        version: link:../grpc-utils
       '@protobuf-es/core':
         specifier: ^0.0.13
         version: 0.0.13
+      '@protobuf-es/grpc-utils':
+        specifier: 'workspace: *'
+        version: link:../grpc-utils
     devDependencies:
       '@types/node':
         specifier: ^22.10.7
@@ -100,15 +100,15 @@ importers:
 
   packages/server:
     dependencies:
-      '@cexoso/grpc-frame-work':
-        specifier: 'workspace: *'
-        version: link:../grpc-frame-work
-      '@cexoso/grpc-utils':
-        specifier: 'workspace: *'
-        version: link:../grpc-utils
       '@protobuf-es/core':
         specifier: ^0.0.13
         version: 0.0.13
+      '@protobuf-es/grpc-frame-work':
+        specifier: 'workspace: *'
+        version: link:../grpc-frame-work
+      '@protobuf-es/grpc-utils':
+        specifier: 'workspace: *'
+        version: link:../grpc-utils
     devDependencies:
       '@types/node':
         specifier: ^22.10.7
