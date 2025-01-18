@@ -28,12 +28,10 @@
   },
   "dependencies": {
     "@types/node": "^22.10.1",
-    "@types/resolve-path": "^1.4.0",
+    "@protobuf-es/grpc-utils": "workspace: *",
     "inversify": "^6.1.6",
     "radash": "^12.1.0",
-    "reflect-metadata": "^0.2.2",
-    "resolve-path": "^1.4.0",
-    "zod": "^3.23.8"
+    "reflect-metadata": "^0.2.2"
   },
   "volta": {
     "extends": "../../../package.json"

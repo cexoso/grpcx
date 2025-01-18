@@ -5,12 +5,21 @@ import { dash } from "radash";
 import { Modules } from "./modules";
 import { runAllMehtodMiddlewares } from "../../decorators/apply-method-middleware-decorator";
 import { getGrpcDescriptions } from "../../decorators/grpc-decorator";
+import { Http2Server, createServer } from "http2";
+import { MetaDataManager } from "../../metadata-manager/metadata-manager";
+import { handleRequest } from "./handle-requeset";
+
+function getHttp2Server(createAppOptions?: CreateAppOptions) {
+  const http2Server = createAppOptions?.http2Server ?? createServer();
+  return http2Server;
+}
 
 export interface Options {
   // injectable classes
   injectables?: Function[];
   middlewares?: Middleware[];
   importModules?: Modules[];
+  metadataManager: MetaDataManager;
 }
 
 export interface RouteConfig {
@@ -171,6 +180,10 @@ const createRouterHelper = (controllerMaps: Map<string, Function>) => {
   };
 };
 
+export interface CreateAppOptions {
+  http2Server?: Http2Server;
+}
+
 export const grpcApp = (opts: Options) => {
   const middlewares = opts.middlewares ?? [];
 
@@ -184,7 +197,8 @@ export const grpcApp = (opts: Options) => {
   const routerHelper = createRouterHelper(controllerMaps);
   // 应用级的服务在这注册
   return {
-    createApp() {
+    createApp(createAppOptions?: CreateAppOptions) {
+      const http2server = getHttp2Server(createAppOptions);
       const appContainer = new Container();
 
       // 业务自己声明的 injectables
@@ -203,6 +217,35 @@ export const grpcApp = (opts: Options) => {
         requestInjectables: requestInjectables,
         requestModules: importModules.requestInjectables,
       });
+
+      function getApply<T>(serviceName: string, method: string) {
+        const metadataManager = opts.metadataManager;
+        const handle = routerHelper.getHandle(serviceName, method);
+        const metadata = metadataManager.getMetadata<T>(serviceName, method);
+
+        if (metadata === undefined || handle === undefined) {
+          return undefined;
+        }
+        const { controller, methodName } = handle;
+        const requestContainer = createRequestContainer();
+        if (!requestContainer.isBound(controller)) {
+          return undefined;
+        }
+
+        const apply = <T>(input: T) => {
+          const requestContainer = createRequestContainer();
+          const controllerInstance = requestContainer.get<any>(controller);
+          return controllerInstance[methodName].apply(controllerInstance, [
+            input,
+          ]);
+        };
+
+        return {
+          apply,
+          requestDecoder: metadata.requestDecoder,
+          responseEncoder: metadata.responseEncoder,
+        };
+      }
       return {
         // 返回给上层去继承，而不是将运行时传递进来
         // appContainer.parent = runtimeContainer;
@@ -210,6 +253,11 @@ export const grpcApp = (opts: Options) => {
         createRequestContainer,
         unshiftMiddleware(middleware: Middleware) {
           middlewares.unshift(middleware);
+        },
+        listen(port: number) {
+          handleRequest({ http2server, getApply });
+          http2server.listen(port);
+          return port;
         },
         async applyMethodMiddllware(
           opts: {
@@ -227,20 +275,6 @@ export const grpcApp = (opts: Options) => {
             return next(); // 表示直接执行外部的逻辑
           }
           await applyMiddleware(middlewares, ctx, next);
-        },
-        getHandlerClass(serviceName: string, method: string) {
-          const handle = routerHelper.getHandle(serviceName, method);
-          return {
-            apply: <T>(input: T) => {
-              const { controller, methodName } = handle!;
-              const requestContainer = createRequestContainer();
-              const controllerInstance = requestContainer.get<any>(controller);
-              return controllerInstance[methodName].apply(controllerInstance, [
-                input,
-              ]);
-            },
-            ...handle,
-          };
         },
       };
     },
