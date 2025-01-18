@@ -1,18 +1,11 @@
 import { createServer, constants } from "http2";
-import { wrapDecode, wrapEncode } from "@protobuf-es/core";
-import {
-  decodeHelloRequest as _decodeHelloRequests,
-  encodeHelloReply as _encodeHelloReply,
-} from "./messages/helloworld";
-import { encode, decode } from "@cexoso/grpc-utils";
+import { getMetadata } from "./messages";
 import { Buffer } from "buffer";
 import { HelloApp } from "./app";
+import { decode, encode } from "@protobuf-es/grpc-utils";
 const app = HelloApp.createApp();
 
 constants.HTTP2_HEADER_STATUS;
-
-const decodeHelloRequest = wrapDecode(_decodeHelloRequests);
-const encodeHelloReply = wrapEncode(_encodeHelloReply);
 
 const server = createServer();
 
@@ -23,6 +16,8 @@ server.on("stream", (stream, headers) => {
   const methodName = paths[2]!;
 
   const handle = app.getHandlerClass(serviceName, methodName);
+  const metadata = getMetadata(serviceName, methodName)!;
+  const { responseEncoder, requestDecoder } = metadata;
 
   let data: Buffer[] = [];
   stream.on("data", (buffer: Buffer) => {
@@ -32,9 +27,9 @@ server.on("stream", (stream, headers) => {
   stream.on("end", () => {
     const req = Buffer.concat(data);
     const message = decode(new Uint8Array(req));
-    const reqData = decodeHelloRequest(message);
+    const reqData = requestDecoder(message);
     const response = handle.apply(reqData);
-    const responsMessage = encodeHelloReply(response);
+    const responsMessage = responseEncoder(response);
     stream.respond(
       {
         ":status": 200,
@@ -50,7 +45,6 @@ server.on("stream", (stream, headers) => {
     stream.write(
       encode(new Uint8Array(Buffer.from(responsMessage))),
       (error) => {
-        console.log("res.stream.end();");
         if (!error) {
           stream.end();
           stream.once("wantTrailers", () => {
