@@ -44,7 +44,12 @@ function getModules(modules?: Modules[]) {
 }
 
 function getControllerMaps(opts: Options) {
-  const injectables = opts.injectables;
+  const injectables = [
+    // 这代码好丑啊
+    ...(opts.injectables ?? []),
+    ...(opts.importModules?.flatMap((m) => m.injectables ?? []) ?? []),
+  ];
+
   const controllerMaps = new Map(
     injectables
       ?.filter((injectable) => {
@@ -222,7 +227,6 @@ export const grpcApp = (opts: Options) => {
         const metadataManager = opts.metadataManager;
         const handle = routerHelper.getHandle(serviceName, method);
         const metadata = metadataManager.getMetadata<T>(serviceName, method);
-
         if (metadata === undefined || handle === undefined) {
           return undefined;
         }
