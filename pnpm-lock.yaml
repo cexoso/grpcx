@@ -46,8 +46,8 @@ importers:
         version: 0.2.2
     devDependencies:
       '@cexoso/ts-pkg-build':
-        specifier: ^0.0.15
-        version: 0.0.15(typescript@5.7.3)
+        specifier: ^0.0.18
+        version: 0.0.18(typescript@5.7.3)
       '@types/sinon':
         specifier: ^17.0.3
         version: 17.0.3
@@ -74,8 +74,8 @@ importers:
   packages/grpc-utils:
     devDependencies:
       '@cexoso/ts-pkg-build':
-        specifier: ^0.0.15
-        version: 0.0.15(typescript@5.7.3)
+        specifier: ^0.0.18
+        version: 0.0.18(typescript@5.7.3)
       typescript:
         specifier: ^5.7.3
         version: 5.7.3
@@ -86,13 +86,9 @@ importers:
 
   packages/proto-manager:
     devDependencies:
-      '@cexoso/ts-pkg-build':
-        specifier: ^0.0.15
-        version: 0.0.15(typescript@5.7.3)
       '@protobuf-es/cli':
         specifier: ^0.0.22
         version: 0.0.22
-    publishDirectory: dist
 
   packages/server:
     dependencies:
@@ -281,8 +277,8 @@ packages:
       '@babel/helper-validator-identifier': 7.25.9
     dev: true
 
-  /@cexoso/ts-pkg-build@0.0.15(typescript@5.7.3):
-    resolution: {integrity: sha512-HAxmtw1jIO1leZMnv8xasNGwYBFL+8YQ0KP7M6pMhgPr6OBK+2kZUYSntY3Em+FnSsshbNFsGQ21WWH1scv3Fw==}
+  /@cexoso/ts-pkg-build@0.0.18(typescript@5.7.3):
+    resolution: {integrity: sha512-fY9f9PHAMeLCK0JasgOynmijKyWD5csdPT6pgnpGFAuox+SDUdaW65kg97cQcSz6SkhiURywUT5PBI1MzD6uBA==}
     hasBin: true
     dependencies:
       '@babel/core': 7.26.0
@@ -2467,6 +2463,7 @@ packages:
 
   /inflight@1.0.6:
     resolution: {integrity: sha512-k92I/b08q4wvFscXCLvqfsHCrjrF7yiXsQuIVvVE7N82W3+aqpzuUdBbfhWcy/FZR3/4IgflMgKLOsvPDrGCJA==}
+    deprecated: This module is not supported, and leaks memory. Do not use it. Check out lru-cache if you want a good and tested way to coalesce async requests by a key value, which is much more comprehensive and powerful.
     dependencies:
       once: 1.4.0
       wrappy: 1.0.2

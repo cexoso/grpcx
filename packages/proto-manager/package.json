@@ -1,16 +1,8 @@
 {
   "name": "protos",
   "private": true,
-  "publishConfig": {
-    "directory": "dist",
-    "linkDirectory": false
-  },
-  "scripts": {
-    "build": "ts-pkg-build build",
-    "prepublishOnly": "npm run build"
-  },
+  "scripts": {},
   "devDependencies": {
-    "@protobuf-es/cli": "^0.0.22",
-    "@cexoso/ts-pkg-build": "^0.0.15"
+    "@protobuf-es/cli": "^0.0.22"
   }
 }
