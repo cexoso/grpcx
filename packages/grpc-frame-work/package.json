@@ -5,6 +5,8 @@
     "directory": "dist",
     "linkDirectory": false
   },
+  "main": "./src/index.ts",
+  "module": "./src/index.ts",
   "exports": {
     ".": "./src/index.ts"
   },
