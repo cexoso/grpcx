@@ -24,13 +24,15 @@ const message = encodeMessage({
 });
 
 const x = encode(new Uint8Array(Buffer.from(message)));
-console.log("debugger 🐛", x.buffer);
 
 req.write(x);
 req.end();
 
 let data = Buffer.from("");
 
+req.on("response", (header) => {
+  console.log("debugger 🐛 header", header);
+});
 req.on("data", (chunk) => {
   data = Buffer.concat([data, chunk]);
 });

@@ -16,4 +16,5 @@ export function response404(stream: ServerHttp2Stream) {
   stream.respond({
     ":status": 404,
   });
+  stream.end()
 }
