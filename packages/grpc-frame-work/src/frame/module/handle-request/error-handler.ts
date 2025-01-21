@@ -1,27 +1,33 @@
 import { ServerHttp2Stream } from 'http2'
+import { CustomerError } from '../../../errors'
 
-const getMessageAndCode = (error: unknown) => {
-  if (error instanceof Error) {
-    // @ts-ignore
-    const code = error.code ?? -1
+const getMessageAndCode = (
+  error: unknown
+): {
+  message: string
+  status: number
+} => {
+  if (error instanceof CustomerError) {
+    const status = error.status
     return {
       message: error.message,
-      code: code,
+      status: status,
     }
   }
   return {
-    code: -1,
+    status: -1,
     message: 'unknown',
   }
 }
 
 export function errorHandler(error: unknown, stream: ServerHttp2Stream) {
-  const { message, code } = getMessageAndCode(error)
+  const { message, status } = getMessageAndCode(error)
   stream.end()
   stream.once('wantTrailers', () => {
     stream.sendTrailers({
-      'grpc-message': message,
-      'grpc-status': code,
+      // 这里不能传输中文字符
+      'grpc-message': encodeURIComponent(message),
+      'grpc-status': status,
     })
   })
 }
