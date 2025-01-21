@@ -6,10 +6,10 @@ import { CustomerError } from '../../../../grpc-frame-work/src/errors'
 @Controller('helloworld.Greeter')
 export class Greeter implements GreeterInterface {
   @GrpcMethod('SayHello')
-  public hello(input: HelloRequest): HelloReply {
+  public sayHello(input: HelloRequest): HelloReply {
     const length = input.name?.length ?? 0
     if (length > 10) {
-      throw new CustomerError('名称长度不能大于 10', -1)
+      throw new CustomerError('name length must be less than 11', -1)
     }
     return {
       message: `hello ${input.name}`,
