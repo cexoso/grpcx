@@ -91,8 +91,8 @@ importers:
   packages/proto-manager:
     devDependencies:
       '@protobuf-es/cli':
-        specifier: ^0.0.23
-        version: 0.0.23
+        specifier: ^0.0.24
+        version: 0.0.24
 
   packages/server:
     dependencies:
@@ -859,8 +859,8 @@ packages:
       prettier: 3.4.2
     dev: true
 
-  /@protobuf-es/cli@0.0.23:
-    resolution: {integrity: sha512-OeSnC3/7JHv1eT5WR1DunhpBi6cnPpyDlJfRQxY3Fw4/hOPzZGH0t4/ctHouMeaWwmJAOM6IlHz1zFDagZ3kSQ==}
+  /@protobuf-es/cli@0.0.24:
+    resolution: {integrity: sha512-pFx1G1aG9P01p4W2Y00r2kKU2Ey3sBSxGbP41gy1fCRwg50PVUzn9myclkRVhevOx2LZISb6icgu4yoj+qE29w==}
     dependencies:
       '@prettier/sync': 0.5.2(prettier@3.4.2)
       commander: 12.1.0

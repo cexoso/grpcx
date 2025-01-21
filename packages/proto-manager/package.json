@@ -3,6 +3,6 @@
   "private": true,
   "scripts": {},
   "devDependencies": {
-    "@protobuf-es/cli": "^0.0.23"
+    "@protobuf-es/cli": "^0.0.24"
   }
 }
