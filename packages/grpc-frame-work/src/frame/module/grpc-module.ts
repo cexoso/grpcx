@@ -7,7 +7,7 @@ import { runAllMehtodMiddlewares } from "../../decorators/apply-method-middlewar
 import { getGrpcDescriptions } from "../../decorators/grpc-decorator";
 import { Http2Server, createServer } from "http2";
 import { MetaDataManager } from "../../metadata-manager/metadata-manager";
-import { handleRequest } from "./handle-requeset";
+import { handleRequest } from "./handle-request/handle-requeset";
 
 function getHttp2Server(createAppOptions?: CreateAppOptions) {
   const http2Server = createAppOptions?.http2Server ?? createServer();
