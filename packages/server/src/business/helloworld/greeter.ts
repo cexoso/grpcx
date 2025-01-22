@@ -1,12 +1,10 @@
-import { Controller, GrpcMethod } from '@protobuf-es/grpc-frame-work'
+import { Controller, GrpcMethod, CustomerError } from '@protobuf-es/grpc-frame-work'
 import { GreeterInterface } from './greeter-interface'
-import { HelloReply, HelloRequest } from '../../messages/helloworld'
-import { CustomerError } from '../../../../grpc-frame-work/src/errors'
-
+import { HelloRequest, HelloReply, GetCurrentUserReq, User } from '../../messages/helloworld'
 @Controller('helloworld.Greeter')
 export class Greeter implements GreeterInterface {
   @GrpcMethod('SayHello')
-  public sayHello(input: HelloRequest): HelloReply {
+  public async sayHello(input: HelloRequest): Promise<HelloReply> {
     const length = input.name?.length ?? 0
     if (length > 10) {
       throw new CustomerError('name length must be less than 11', -1)
@@ -14,5 +12,9 @@ export class Greeter implements GreeterInterface {
     return {
       message: `hello ${input.name}`,
     }
+  }
+  @GrpcMethod('GetCurrentUser')
+  public async getCurrentUser(_input: GetCurrentUserReq): Promise<User> {
+    throw new Error('TO IMPLEMENTS')
   }
 }

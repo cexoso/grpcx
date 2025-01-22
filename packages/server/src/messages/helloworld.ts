@@ -1,4 +1,12 @@
-import { readString, defineMessage, TagHandler, EncoderWithoutTag, encodeStringToBuffer, readInt32, encodeInt32ToBuffer } from '@protobuf-es/core'
+import {
+  readString,
+  defineMessage,
+  TagHandler,
+  EncoderWithoutTag,
+  encodeStringToBuffer,
+  readInt32,
+  encodeInt32ToBuffer,
+} from '@protobuf-es/core'
 export interface HelloRequest {
   name?: string
 }

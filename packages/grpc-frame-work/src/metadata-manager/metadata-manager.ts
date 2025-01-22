@@ -7,7 +7,7 @@ interface Metadata<T = any> {
   responseEncoder: (input: T) => Uint8Array;
 }
 
-export class MetaDataManager {
+export class MetadataManager {
   #serviceMap = new Map<ServiceName, Map<MethodName, Metadata>>();
   public constructor() {}
 

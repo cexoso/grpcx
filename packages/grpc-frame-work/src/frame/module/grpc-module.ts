@@ -6,7 +6,7 @@ import { Modules } from "./modules";
 import { runAllMehtodMiddlewares } from "../../decorators/apply-method-middleware-decorator";
 import { getGrpcDescriptions } from "../../decorators/grpc-decorator";
 import { Http2Server, createServer } from "http2";
-import { MetaDataManager } from "../../metadata-manager/metadata-manager";
+import { MetadataManager } from "../../metadata-manager/metadata-manager";
 import { handleRequest } from "./handle-request/handle-requeset";
 
 function getHttp2Server(createAppOptions?: CreateAppOptions) {
@@ -19,7 +19,7 @@ export interface Options {
   injectables?: Function[];
   middlewares?: Middleware[];
   importModules?: Modules[];
-  metadataManager: MetaDataManager;
+  metadataManager: MetadataManager;
 }
 
 export interface RouteConfig {

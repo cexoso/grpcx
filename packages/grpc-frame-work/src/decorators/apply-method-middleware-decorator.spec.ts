@@ -7,7 +7,7 @@ import {
 } from "./apply-method-middleware-decorator";
 import { Controller, Service } from "./class-decoratos";
 import { grpcApp } from "../frame/module/grpc-module";
-import { MetaDataManager } from "../metadata-manager/metadata-manager";
+import { MetadataManager } from "../metadata-manager/metadata-manager";
 
 const TestMiddleware2: FunctionMiddleware = async (_ctx, next) => {
   _ctx.order = _ctx.order || [];
@@ -61,7 +61,7 @@ describe("middlware", () => {
     const next = stub();
     const appDescription = grpcApp({
       injectables: [FooController],
-      metadataManager: new MetaDataManager(),
+      metadataManager: new MetadataManager(),
     });
     const app = appDescription.createApp();
     const request = app.createRequestContainer();
@@ -89,7 +89,7 @@ describe("middlware", () => {
     };
     const appDescription = grpcApp({
       injectables: [FooController],
-      metadataManager: new MetaDataManager(),
+      metadataManager: new MetadataManager(),
     });
     const app = appDescription.createApp();
     const request = app.createRequestContainer();
@@ -114,7 +114,7 @@ describe("middlware", () => {
     const next = stub();
     const appDescription = grpcApp({
       injectables: [BarController],
-      metadataManager: new MetaDataManager(),
+      metadataManager: new MetadataManager(),
     });
     const app = appDescription.createApp();
     const request = app.createRequestContainer();
@@ -168,7 +168,7 @@ describe("middlware", () => {
     }
     const appDescription = grpcApp({
       injectables: [InnerController, AppService, RequestService],
-      metadataManager: new MetaDataManager(),
+      metadataManager: new MetadataManager(),
     });
     const app = appDescription.createApp();
     const request = app.createRequestContainer();
