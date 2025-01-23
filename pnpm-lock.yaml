@@ -12,14 +12,14 @@ importers:
         specifier: ^3.4.2
         version: 3.4.2
 
-  packages/client:
+  examples/client:
     dependencies:
       '@protobuf-es/core':
         specifier: ^0.0.13
         version: 0.0.13
       '@protobuf-es/grpc-utils':
         specifier: 'workspace: *'
-        version: link:../grpc-utils
+        version: link:../../packages/grpc-utils
     devDependencies:
       '@types/node':
         specifier: ^22.10.7
@@ -30,6 +30,43 @@ importers:
       typescript:
         specifier: ^5.7.3
         version: 5.7.3
+
+  examples/proto-manager:
+    devDependencies:
+      '@protobuf-es/cli':
+        specifier: ^0.0.24
+        version: 0.0.24
+
+  examples/server:
+    dependencies:
+      '@protobuf-es/core':
+        specifier: ^0.0.13
+        version: 0.0.13
+      '@protobuf-es/grpc-frame-work':
+        specifier: 'workspace: *'
+        version: link:../../packages/grpc-frame-work
+      '@protobuf-es/grpc-utils':
+        specifier: 'workspace: *'
+        version: link:../../packages/grpc-utils
+    devDependencies:
+      '@types/node':
+        specifier: ^22.10.7
+        version: 22.10.7
+      nodemon:
+        specifier: ^3.1.9
+        version: 3.1.9
+      ts-node:
+        specifier: ^10.9.2
+        version: 10.9.2(@types/node@22.10.7)(typescript@5.7.3)
+      tsup:
+        specifier: ^8.3.5
+        version: 8.3.5(typescript@5.7.3)
+      typescript:
+        specifier: ^5.7.3
+        version: 5.7.3
+      vitest:
+        specifier: ^2.1.8
+        version: 2.1.8(@types/node@22.10.7)
 
   packages/grpc-frame-work:
     dependencies:
@@ -88,42 +125,18 @@ importers:
         version: 2.1.8(@types/node@22.10.7)
     publishDirectory: dist
 
-  packages/proto-manager:
+  packages/http2-client:
     devDependencies:
-      '@protobuf-es/cli':
-        specifier: ^0.0.24
-        version: 0.0.24
-
-  packages/server:
-    dependencies:
-      '@protobuf-es/core':
-        specifier: ^0.0.13
-        version: 0.0.13
-      '@protobuf-es/grpc-frame-work':
-        specifier: 'workspace: *'
-        version: link:../grpc-frame-work
-      '@protobuf-es/grpc-utils':
-        specifier: 'workspace: *'
-        version: link:../grpc-utils
-    devDependencies:
-      '@types/node':
-        specifier: ^22.10.7
-        version: 22.10.7
-      nodemon:
-        specifier: ^3.1.9
-        version: 3.1.9
-      ts-node:
-        specifier: ^10.9.2
-        version: 10.9.2(@types/node@22.10.7)(typescript@5.7.3)
-      tsup:
-        specifier: ^8.3.5
-        version: 8.3.5(typescript@5.7.3)
+      '@cexoso/ts-pkg-build':
+        specifier: ^0.0.18
+        version: 0.0.18(typescript@5.7.3)
       typescript:
         specifier: ^5.7.3
         version: 5.7.3
       vitest:
         specifier: ^2.1.8
         version: 2.1.8(@types/node@22.10.7)
+    publishDirectory: dist
 
 packages:
 
