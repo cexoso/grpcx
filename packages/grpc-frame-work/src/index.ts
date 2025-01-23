@@ -18,3 +18,5 @@ export type { FunctionMiddleware } from './decorators/apply-method-middleware-de
 
 export { createModule } from './frame/module/modules'
 export type { ModulePredicate, Modules } from './frame/module/modules'
+
+export { inject } from 'inversify'

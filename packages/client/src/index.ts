@@ -44,7 +44,9 @@ function getReqHeader(contentType: string) {
 }
 
 async function callWithJSON(name: string) {
-  const client = connect('http://localhost:50051')
+  const client = connect('https://localhost:50051', {
+    rejectUnauthorized: false,
+  })
 
   const req = client.request(getReqHeader('application/json'))
 
@@ -70,7 +72,9 @@ async function callWithJSON(name: string) {
 }
 
 async function callWithRPC(name: string) {
-  const client = connect('http://localhost:50051')
+  const client = connect('https://localhost:50051', {
+    rejectUnauthorized: false,
+  })
 
   const req = client.request(getReqHeader('application/grpc'))
 
@@ -101,9 +105,9 @@ async function callWithRPC(name: string) {
 }
 
 async function main() {
-  callWithJSON('world')
+  // callWithJSON('world')
   callWithRPC('world')
-  callWithRPC('传一个超长的名称以触发服务器端抛业务异常')
+  // callWithRPC('传一个超长的名称以触发服务器端抛业务异常')
 }
 
 main()
