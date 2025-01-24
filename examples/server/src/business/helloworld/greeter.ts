@@ -11,12 +11,15 @@ export class Greeter implements GreeterInterface {
     if (length > 10) {
       throw new CustomerError('name length must be less than 11', -1)
     }
+    const body = await this.greeterService.getCurrentUser({})
     return {
-      message: `hello ${input.name}`,
+      message: `hello ${input.name}, I am ${body.name}`,
     }
   }
   @GrpcMethod('GetCurrentUser')
   public async getCurrentUser(_input: GetCurrentUserReq): Promise<User> {
-    throw new Error('TO IMPLEMENTS')
+    return {
+      name: 'jie',
+    }
   }
 }

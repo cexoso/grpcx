@@ -22,7 +22,7 @@ export async function callRPC<I = any, O = any>(opts: {
   })
 
   // TODO: 对于大数据量的场景来说，这里需要判断是否发送成功，如果不成功，需要等待 drain 事件再发送
-  req.write(isJSON ? JSON.stringify({ data }) : encode(new Uint8Array(opts.encodeReq(data))))
+  req.write(isJSON ? JSON.stringify(data) : encode(new Uint8Array(opts.encodeReq(data))))
   req.end()
 
   const response = await getResponse(req)

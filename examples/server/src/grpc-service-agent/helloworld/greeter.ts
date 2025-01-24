@@ -14,12 +14,17 @@ import { wrapDecode, wrapEncode } from '@protobuf-es/core'
 
 @Service('Request')
 export class GreeterService {
-  public async sayHello(input: HelloRequest): Promise<HelloReply> {
+  #createClient = () => {
     const client = createClient({
       host: 'localhost',
       port: 50051,
       rejectUnauthorized: false,
     })
+    return client
+  }
+
+  public async sayHello(input: HelloRequest): Promise<HelloReply> {
+    const client = this.#createClient()
     const response = await callRPC({
       encodeReq: wrapEncode(encodeHelloRequest),
       decodeRes: wrapDecode(decodeHelloReply),
@@ -29,12 +34,9 @@ export class GreeterService {
     }).finally(() => client.close())
     return response.data
   }
+
   public async getCurrentUser(input: GetCurrentUserReq): Promise<User> {
-    const client = createClient({
-      host: 'localhost',
-      port: 50051,
-      rejectUnauthorized: false,
-    })
+    const client = this.#createClient()
     const response = await callRPC({
       encodeReq: wrapEncode(encodeGetCurrentUserReq),
       decodeRes: wrapDecode(decodeUser),
