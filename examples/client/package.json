@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@protobuf-es/core": "^0.0.13",
-    "@protobuf-es/grpc-utils": "workspace: *"
+    "@protobuf-es/grpc-utils": "workspace: *",
+    "@protobuf-es/http2-client": "workspace: *"
   }
 }
