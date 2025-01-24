@@ -14,9 +14,10 @@ const getMessageAndCode = (
       status: status,
     }
   }
+  console.log(error)
   return {
-    status: -1,
-    message: 'unknown',
+    status: 503,
+    message: 'inter_server_error',
   }
 }
 
