@@ -51,6 +51,9 @@ importers:
       '@protobuf-es/grpc-utils':
         specifier: 'workspace: *'
         version: link:../../packages/grpc-utils
+      '@protobuf-es/http2-client':
+        specifier: 'workspace: *'
+        version: link:../../packages/http2-client
     devDependencies:
       '@types/node':
         specifier: ^22.10.7

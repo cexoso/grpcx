@@ -10,7 +10,8 @@
   "dependencies": {
     "@protobuf-es/core": "^0.0.13",
     "@protobuf-es/grpc-frame-work": "workspace: *",
-    "@protobuf-es/grpc-utils": "workspace: *"
+    "@protobuf-es/grpc-utils": "workspace: *",
+    "@protobuf-es/http2-client": "workspace: *"
   },
   "devDependencies": {
     "@types/node": "^22.10.7",

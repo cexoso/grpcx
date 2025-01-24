@@ -1,35 +1,47 @@
 import { Service } from '@protobuf-es/grpc-frame-work'
-import { HelloRequest, HelloReply, GetCurrentUserReq, User } from '../../messages/helloworld'
+import {
+  HelloRequest,
+  HelloReply,
+  GetCurrentUserReq,
+  User,
+  encodeHelloRequest,
+  decodeHelloReply,
+  encodeGetCurrentUserReq,
+  decodeUser,
+} from '../../messages/helloworld'
+import { createClient, callRPC } from '@protobuf-es/http2-client'
+import { wrapDecode, wrapEncode } from '@protobuf-es/core'
 
 @Service('Request')
 export class GreeterService {
-  public async sayHello(_input: HelloRequest): Promise<HelloReply> {
-    const response = await fetch('https://127.0.0.1:50051/helloworld.Greeter/SayHello', {
-      method: 'POST',
-      headers: {
-        ':authority': 'localhost:50051',
-        ':path': '/helloworld.Greeter/SayHello',
-        'accept-encoding': 'identity',
-        'content-type': 'application/grpc',
-        te: 'trailers',
-      },
+  public async sayHello(input: HelloRequest): Promise<HelloReply> {
+    const client = createClient({
+      host: 'localhost',
+      port: 50051,
+      rejectUnauthorized: false,
     })
-    const data = await response.json()
-    return data
+    const response = await callRPC({
+      encodeReq: wrapEncode(encodeHelloRequest),
+      decodeRes: wrapDecode(decodeHelloReply),
+      data: input,
+      client,
+      path: '/helloworld.Greeter/SayHello',
+    }).finally(() => client.close())
+    return response.data
   }
-  public async getCurrentUser(_input: GetCurrentUserReq): Promise<User> {
-    console.log('debugger 🐛 _input', _input)
-    const response = await fetch('https://127.0.0.1:50051/helloworld.Greeter/GetCurrentUser', {
-      method: 'POST',
-      headers: {
-        ':authority': 'localhost:50051',
-        ':path': '/helloworld.Greeter/GetCurrentUser',
-        'accept-encoding': 'identity',
-        'content-type': 'application/grpc',
-        te: 'trailers',
-      },
+  public async getCurrentUser(input: GetCurrentUserReq): Promise<User> {
+    const client = createClient({
+      host: 'localhost',
+      port: 50051,
+      rejectUnauthorized: false,
     })
-    const data = await response.json()
-    return data
+    const response = await callRPC({
+      encodeReq: wrapEncode(encodeGetCurrentUserReq),
+      decodeRes: wrapDecode(decodeUser),
+      data: input,
+      client,
+      path: '/helloworld.Greeter/GetCurrentUser',
+    }).finally(() => client.close())
+    return response.data
   }
 }
